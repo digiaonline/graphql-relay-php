@@ -4,6 +4,7 @@ namespace Digia\GraphQL\Relay\Test;
 
 use Digia\GraphQL\Relay\ConnectionArguments;
 use Digia\GraphQL\Relay\StoreInterface;
+use Digia\GraphQL\Relay\StoreNodeInterface;
 
 class ShipStore implements StoreInterface
 {
@@ -42,7 +43,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findFirst(ConnectionArguments $arguments): iterable
+    public function findFirst(int $first, ConnectionArguments $arguments): iterable
     {
         return $this->data;
     }
@@ -50,7 +51,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findLast(ConnectionArguments $arguments): iterable
+    public function findLast(int $last, ConnectionArguments $arguments): iterable
     {
         return $this->data;
     }
@@ -61,5 +62,13 @@ class ShipStore implements StoreInterface
     public function getTotalCount(): int
     {
         return \count($this->data);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function createCursor(StoreNodeInterface $node, ConnectionArguments $arguments): string
+    {
+        return $node->getCursor();
     }
 }

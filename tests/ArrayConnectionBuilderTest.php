@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayConnectionBuilderTest extends TestCase
 {
-
     // basic slicing
 
     public function testBasicSlicing()

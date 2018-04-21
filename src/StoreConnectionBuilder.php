@@ -34,10 +34,10 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     }
 
     /**
-     * @return array
+     * @return iterable
      * @throws RelayException
      */
-    protected function fetchData(): array
+    protected function fetchData(): iterable
     {
         $arguments = $this->arguments;
 
@@ -48,7 +48,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
 
             return null !== $after
                 ? $this->store->findAfterCursor($this->decodeCursor($after), $arguments)
-                : $this->store->findFirst($arguments);
+                : $this->store->findFirst($first, $arguments);
         }
 
         $last = $arguments->getLast();
@@ -58,7 +58,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
 
             return null !== $before
                 ? $this->store->findBeforeCursor($this->decodeCursor($before), $arguments)
-                : $this->store->findLast($arguments);
+                : $this->store->findLast($last, $arguments);
         }
 
         throw new RelayException('You must provide a `first` or `last` value to properly paginate connections.');
@@ -66,19 +66,9 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
 
     /**
      * @inheritdoc
-     */
-    public function createEdges(array $data, int $startOffset): array
-    {
-        return \array_map(function (NodeInterface $node): Edge {
-            return new Edge($this->encodeCursor($node->createCursor($this->arguments)), $node);
-        }, $data);
-    }
-
-    /**
-     * @inheritdoc
      * @throws RelayException
      */
-    public function getData(): iterable
+    protected function getData(): iterable
     {
         if (!isset($this->data)) {
             $this->data = $this->fetchData();
@@ -90,7 +80,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @return int
      */
-    public function getOffset(): int
+    protected function getOffset(): int
     {
         return 0;
     }
@@ -98,9 +88,19 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @inheritdoc
      */
-    public function getTotalCount(): int
+    protected function getTotalCount(): int
     {
         return $this->store->getTotalCount();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function createEdges(array $data, int $startOffset): array
+    {
+        return \array_map(function (StoreNodeInterface $node): Edge {
+            return new Edge($this->encodeCursor($this->store->createCursor($node, $this->arguments)), $node);
+        }, $data);
     }
 
     /**
@@ -131,9 +131,9 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
      */
     protected function createCursorMap(): array
     {
-        return \array_reduce($this->getData(), function ($cursors, NodeInterface $node): array {
+        return \array_reduce($this->getData(), function ($cursors, StoreNodeInterface $node): array {
             static $index = 0;
-            $cursors[$this->encodeCursor($node->createCursor($this->arguments))] = $index++;
+            $cursors[$this->encodeCursor($this->store->createCursor($node, $this->arguments))] = $index++;
             return $cursors;
         }, []);
     }

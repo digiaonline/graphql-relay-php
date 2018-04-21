@@ -13,11 +13,6 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     protected $arraySlice;
 
     /**
-     * @var ConnectionArguments
-     */
-    protected $arguments;
-
-    /**
      * @var int
      */
     protected $sliceStart;
@@ -51,7 +46,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @inheritdoc
      */
-    public function getData(): iterable
+    protected function getData(): iterable
     {
         return $this->arraySlice;
     }
@@ -59,7 +54,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @inheritdoc
      */
-    public function getOffset(): int
+    protected function getOffset(): int
     {
         return $this->sliceStart;
     }
@@ -67,7 +62,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @return int
      */
-    public function getTotalCount(): int
+    protected function getTotalCount(): int
     {
         return \count($this->arraySlice);
     }
@@ -75,21 +70,12 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @inheritdoc
      */
-    public function createEdges(array $data, int $startOffset): array
+    protected function createEdges(array $data, int $startOffset): array
     {
-        $offset = 0;
-        return \array_map(function ($value) use ($startOffset, &$offset): Edge {
-            return new Edge($this->offsetToCursor($startOffset + $offset++), $value);
+        return \array_map(function ($node) use ($startOffset): Edge {
+            static $offset = 0;
+            return new Edge($this->offsetToCursor($startOffset + $offset++), $node);
         }, $data);
-    }
-
-    /**
-     * @param string $cursor
-     * @return int|null
-     */
-    protected function getOffsetForCursor(string $cursor): ?int
-    {
-        return $this->cursorToOffset($cursor);
     }
 
     /**

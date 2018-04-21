@@ -2,35 +2,49 @@
 
 namespace Digia\GraphQL\Relay\Test;
 
-use Digia\GraphQL\Relay\ConnectionArguments;
-use Digia\GraphQL\Relay\NodeInterface;
+use Digia\GraphQL\Relay\StoreNodeInterface;
 
-class Ship implements NodeInterface
+class Ship implements StoreNodeInterface
 {
 
-    public $id;
-    public $name;
-    public $cursor;
+    protected $id;
+    protected $name;
+    protected $cursor;
 
     /**
      * Ship constructor.
      *
-     * @param $id
-     * @param $name
-     * @param $cursor
+     * @param string $id
+     * @param string $name
+     * @param string $cursor
      */
-    public function __construct($id, $name, $cursor)
+    public function __construct(string $id, string $name, string $cursor)
     {
-        $this->id     = $id;
-        $this->name   = $name;
+        $this->id = $id;
+        $this->name = $name;
         $this->cursor = $cursor;
     }
 
     /**
-     * @param ConnectionArguments $arguments
+     * @inheritdoc
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
      * @return string
      */
-    public function createCursor(ConnectionArguments $arguments): string
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCursor(): string
     {
         return $this->cursor;
     }

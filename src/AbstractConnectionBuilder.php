@@ -2,13 +2,40 @@
 
 namespace Digia\GraphQL\Relay;
 
-abstract class AbstractConnectionBuilder implements ConnectionBuilderInterface
+abstract class AbstractConnectionBuilder
 {
 
     /**
      * @var ConnectionArguments
      */
     protected $arguments;
+
+    /**
+     * @return iterable
+     */
+    abstract protected function getData(): iterable;
+
+    /**
+     * @return int
+     */
+    abstract protected function getOffset(): int;
+
+    /**
+     * Returns the total number of items in the connection.
+     *
+     * @return int
+     */
+    abstract protected function getTotalCount(): int;
+
+    /**
+     * Creates the edges for the connection.
+     *
+     * @param array $data
+     * @param int   $startOffset
+     * @param int   $endOffset
+     * @return Edge[]
+     */
+    abstract protected function createEdges(array $data, int $startOffset): array;
 
     /**
      * @param string $cursor
@@ -32,12 +59,10 @@ abstract class AbstractConnectionBuilder implements ConnectionBuilderInterface
      */
     protected function build(): ConnectionInterface
     {
-        $arguments = $this->arguments;
-
-        $data       = $this->getData();
-        $sliceStart = $this->getOffset();
-        $totalCount = $this->getTotalCount();
-
+        $arguments    = $this->arguments;
+        $data         = $this->getData();
+        $sliceStart   = $this->getOffset();
+        $totalCount   = $this->getTotalCount();
         $sliceLength  = \count($data);
         $sliceEnd     = $sliceStart + $sliceLength;
         $after        = $arguments->getAfter();
