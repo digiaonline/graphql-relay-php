@@ -1,6 +1,6 @@
 <?php
 
-namespace Digia\GraphQL\Relay\Test;
+namespace Digia\GraphQL\Relay\Test\Functional;
 
 use Digia\GraphQL\Schema\Schema;
 use PHPUnit\Framework\TestCase;

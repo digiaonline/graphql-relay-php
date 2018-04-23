@@ -1,6 +1,6 @@
 <?php
 
-namespace Digia\GraphQL\Relay\Test;
+namespace Digia\GraphQL\Relay\Test\Functional;
 
 /**
  * This defines a basic set of data for our Star Wars Schema.
@@ -95,9 +95,7 @@ function empire()
 
 function data()
 {
-    global $data;
-
-    $data = [
+    return [
         'Faction' => [
             '1' => rebels(),
             '2' => empire(),
@@ -113,25 +111,6 @@ function data()
             '8' => executor(),
         ],
     ];
-
-    return $data;
-}
-
-function createShip($shipName, $factionId)
-{
-    global $data;
-
-    static $nextShip = 9;
-
-    $newShip = [
-        'id'   => (string)$nextShip++,
-        'name' => $shipName,
-    ];
-
-    $data['Ship'][$newShip['id']]           = $newShip;
-    $data['Faction'][$factionId]['ships'][] = $newShip['id'];
-
-    return $newShip;
 }
 
 function getShip($id)

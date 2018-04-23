@@ -25,10 +25,10 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * ArrayConnectionBuilder constructor.
      *
-     * @param array               $arraySlice
+     * @param array $arraySlice
      * @param ConnectionArguments $arguments
-     * @param int                 $sliceStart
-     * @param int                 $arrayLength
+     * @param int $sliceStart
+     * @param int $arrayLength
      */
     protected function __construct(
         array $arraySlice,
@@ -64,7 +64,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
      */
     protected function getTotalCount(): int
     {
-        return \count($this->arraySlice);
+        return $this->arrayLength;
     }
 
     /**
@@ -97,7 +97,10 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
      */
     protected function cursorToOffset(string $cursor): ?int
     {
-        return (int)\substr($this->decodeCursor($cursor), \strlen(self::PREFIX));
+        $decodedCursor = $this->decodeCursor($cursor);
+        $offsetOrFalse = \substr($decodedCursor, \strlen(self::PREFIX));
+
+        return false !== $offsetOrFalse ? (int)$offsetOrFalse : null;
     }
 
     /**
@@ -105,7 +108,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
      * a connection object for use in GraphQL. It uses array offsets as pagination,
      * so pagination will only work if the array is static.
      *
-     * @param array               $data
+     * @param array $data
      * @param ConnectionArguments $arguments
      * @return ConnectionInterface
      * @throws RelayException
@@ -123,10 +126,10 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
      * to materialize the entire array, and instead wish pass in a slice of the
      * total result large enough to cover the range specified in `args`.
      *
-     * @param array               $arraySlice
+     * @param array $arraySlice
      * @param ConnectionArguments $arguments
-     * @param int                 $sliceStart
-     * @param int                 $arrayLength
+     * @param int $sliceStart
+     * @param int $arrayLength
      * @return ConnectionInterface
      * @throws RelayException
      */

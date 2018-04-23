@@ -37,11 +37,4 @@ interface StoreInterface
      * @return int
      */
     public function getTotalCount(): int;
-
-    /**
-     * @param StoreNodeInterface   $node
-     * @param ConnectionArguments  $arguments
-     * @return string
-     */
-    public function createCursor(StoreNodeInterface $node, ConnectionArguments $arguments): string;
 }

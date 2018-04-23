@@ -1,6 +1,6 @@
 <?php
 
-namespace Digia\GraphQL\Relay\Test;
+namespace Digia\GraphQL\Relay\Test\Functional;
 
 use Digia\GraphQL\Relay\ConnectionArguments;
 use Digia\GraphQL\Relay\StoreInterface;
@@ -62,13 +62,5 @@ class ShipStore implements StoreInterface
     public function getTotalCount(): int
     {
         return \count($this->data);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createCursor(StoreNodeInterface $node, ConnectionArguments $arguments): string
-    {
-        return $node->getCursor();
     }
 }

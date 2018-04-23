@@ -12,7 +12,8 @@
     "require": {},
     "require-dev": {
         "phpunit/phpunit": "^7.1",
-        "digiaonline/graphql": "dev-master"
+        "digiaonline/graphql": "dev-master",
+        "phpstan/phpstan": "^0.10.0@dev"
     },
     "minimum-stability": "dev",
     "autoload": {
@@ -25,8 +26,18 @@
             "Digia\\GraphQL\\Relay\\Test\\": "tests"
         },
         "files": [
-            "./tests/starWarsData.php",
-            "./tests/starWarsSchema.php"
+            "./tests/Functional/starWarsData.php",
+            "./tests/Functional/starWarsSchema.php"
+        ]
+    },
+    "scripts": {
+        "test": [
+            "phpunit",
+            "phpstan analyse -l 1 src/ tests/"
+        ],
+        "travis": [
+            "phpunit --coverage-clover build/logs/clover.xml",
+            "phpstan analyse -l 1 src/ tests/"
         ]
     }
 }

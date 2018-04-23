@@ -99,7 +99,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     protected function createEdges(array $data, int $startOffset): array
     {
         return \array_map(function (StoreNodeInterface $node): Edge {
-            return new Edge($this->encodeCursor($this->store->createCursor($node, $this->arguments)), $node);
+            return new Edge($this->encodeCursor($node->getCursor($this->arguments)), $node);
         }, $data);
     }
 
@@ -133,7 +133,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     {
         return \array_reduce($this->getData(), function ($cursors, StoreNodeInterface $node): array {
             static $index = 0;
-            $cursors[$this->encodeCursor($this->store->createCursor($node, $this->arguments))] = $index++;
+            $cursors[$this->encodeCursor($node->getCursor($this->arguments))] = $index++;
             return $cursors;
         }, []);
     }

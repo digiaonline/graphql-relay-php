@@ -76,7 +76,7 @@ abstract class AbstractConnectionBuilder
 
         if (null !== $first) {
             if ($first < 0) {
-                throw new RelayException('Argument "first" must be a non-negative integer');
+                throw new RelayException('Argument "first" must be a non-negative integer.');
             }
 
             $endOffset = \min($endOffset, $startOffset + $first);
@@ -84,7 +84,7 @@ abstract class AbstractConnectionBuilder
 
         if (null !== $last) {
             if ($last < 0) {
-                throw new RelayException('Argument "last" must be a non-negative integer');
+                throw new RelayException('Argument "last" must be a non-negative integer.');
             }
 
             $startOffset = \max($startOffset, $endOffset - $last);
@@ -123,7 +123,9 @@ abstract class AbstractConnectionBuilder
             return $default;
         }
 
-        return $this->cursorToOffset($cursor) ?? $default;
+        $offset = $this->cursorToOffset($cursor);
+
+        return $offset ?? $default;
     }
 
     /**

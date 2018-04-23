@@ -1,7 +1,8 @@
 <?php
 
-namespace Digia\GraphQL\Relay\Test;
+namespace Digia\GraphQL\Relay\Test\Functional;
 
+use Digia\GraphQL\Relay\ConnectionArguments;
 use Digia\GraphQL\Relay\StoreNodeInterface;
 
 class Ship implements StoreNodeInterface
@@ -42,9 +43,9 @@ class Ship implements StoreNodeInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getCursor(): string
+    public function getCursor(ConnectionArguments $arguments): string
     {
         return $this->cursor;
     }
