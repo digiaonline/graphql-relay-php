@@ -2,10 +2,9 @@
 
 namespace Digia\GraphQL\Relay\Test\Functional;
 
-use Digia\GraphQL\Relay\ConnectionArguments;
-use Digia\GraphQL\Relay\StoreNodeInterface;
+use Digia\GraphQL\Relay\NodeInterface;
 
-class Ship implements StoreNodeInterface
+class Ship implements NodeInterface
 {
 
     protected $id;
@@ -21,8 +20,8 @@ class Ship implements StoreNodeInterface
      */
     public function __construct(string $id, string $name, string $cursor)
     {
-        $this->id = $id;
-        $this->name = $name;
+        $this->id     = $id;
+        $this->name   = $name;
         $this->cursor = $cursor;
     }
 
@@ -43,9 +42,9 @@ class Ship implements StoreNodeInterface
     }
 
     /**
-     * @inheritdoc
+     * @return string
      */
-    public function getCursor(ConnectionArguments $arguments): string
+    public function getCursor(): string
     {
         return $this->cursor;
     }

@@ -37,7 +37,7 @@ class ShipStore implements StoreInterface
      */
     public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): iterable
     {
-        return $this->data;
+        return \array_reverse($this->data);
     }
 
     /**
@@ -53,7 +53,7 @@ class ShipStore implements StoreInterface
      */
     public function findLast(int $last, ConnectionArguments $arguments): iterable
     {
-        return $this->data;
+        return \array_reverse($this->data);
     }
 
     /**
@@ -62,5 +62,15 @@ class ShipStore implements StoreInterface
     public function getTotalCount(): int
     {
         return \count($this->data);
+    }
+
+    /**
+     * @param Ship                $node
+     * @param ConnectionArguments $arguments
+     * @return string
+     */
+    public function createCursor($node, ConnectionArguments $arguments): string
+    {
+        return $node->getCursor();
     }
 }

@@ -20,14 +20,14 @@ interface StoreInterface
     public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): iterable;
 
     /**
-     * @param int $first
+     * @param int                 $first
      * @param ConnectionArguments $arguments
      * @return iterable
      */
     public function findFirst(int $first, ConnectionArguments $arguments): iterable;
 
     /**
-     * @param int $last
+     * @param int                 $last
      * @param ConnectionArguments $arguments
      * @return iterable
      */
@@ -37,4 +37,11 @@ interface StoreInterface
      * @return int
      */
     public function getTotalCount(): int;
+
+    /**
+     * @param mixed               $node
+     * @param ConnectionArguments $arguments
+     * @return string
+     */
+    public function createCursor($node, ConnectionArguments $arguments): string;
 }
