@@ -6,6 +6,10 @@
 
 Relay support for our [GraphQL implementation](https://github.com/digiaonline/graphql-php/).
 
+## Requirements
+
+* PHP >= 7.1
+
 ## Usage
 
 ### Installation
