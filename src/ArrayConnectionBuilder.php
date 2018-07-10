@@ -46,7 +46,7 @@ class ArrayConnectionBuilder extends AbstractConnectionBuilder
     /**
      * @inheritdoc
      */
-    protected function getData(): iterable
+    protected function getData(): array
     {
         return $this->arraySlice;
     }

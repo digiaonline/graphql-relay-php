@@ -8,30 +8,30 @@ interface StoreInterface
     /**
      * @param string              $cursor
      * @param ConnectionArguments $arguments
-     * @return iterable
+     * @return array
      */
-    public function findAfterCursor(string $cursor, ConnectionArguments $arguments): iterable;
+    public function findAfterCursor(string $cursor, ConnectionArguments $arguments): array;
 
     /**
      * @param string              $cursor
      * @param ConnectionArguments $arguments
-     * @return iterable
+     * @return array
      */
-    public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): iterable;
+    public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): array;
 
     /**
      * @param int                 $first
      * @param ConnectionArguments $arguments
-     * @return iterable
+     * @return array
      */
-    public function findFirst(int $first, ConnectionArguments $arguments): iterable;
+    public function findFirst(int $first, ConnectionArguments $arguments): array;
 
     /**
      * @param int                 $last
      * @param ConnectionArguments $arguments
-     * @return iterable
+     * @return array
      */
-    public function findLast(int $last, ConnectionArguments $arguments): iterable;
+    public function findLast(int $last, ConnectionArguments $arguments): array;
 
     /**
      * @return int

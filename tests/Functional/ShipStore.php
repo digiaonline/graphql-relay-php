@@ -27,7 +27,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findAfterCursor(string $cursor, ConnectionArguments $arguments): iterable
+    public function findAfterCursor(string $cursor, ConnectionArguments $arguments): array
     {
         return $this->data;
     }
@@ -35,7 +35,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): iterable
+    public function findBeforeCursor(string $cursor, ConnectionArguments $arguments): array
     {
         return \array_reverse($this->data);
     }
@@ -43,7 +43,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findFirst(int $first, ConnectionArguments $arguments): iterable
+    public function findFirst(int $first, ConnectionArguments $arguments): array
     {
         return $this->data;
     }
@@ -51,7 +51,7 @@ class ShipStore implements StoreInterface
     /**
      * @inheritdoc
      */
-    public function findLast(int $last, ConnectionArguments $arguments): iterable
+    public function findLast(int $last, ConnectionArguments $arguments): array
     {
         return \array_reverse($this->data);
     }

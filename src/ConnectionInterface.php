@@ -6,9 +6,9 @@ interface ConnectionInterface
 {
 
     /**
-     * @return iterable
+     * @return array
      */
-    public function getEdges(): iterable;
+    public function getEdges(): array;
 
     /**
      * @return PageInfo

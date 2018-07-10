@@ -11,9 +11,9 @@ abstract class AbstractConnectionBuilder
     protected $arguments;
 
     /**
-     * @return iterable
+     * @return array
      */
-    abstract protected function getData(): iterable;
+    abstract protected function getData(): array;
 
     /**
      * @return int

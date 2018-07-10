@@ -11,7 +11,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     protected $store;
 
     /**
-     * @var iterable
+     * @var array
      */
     protected $data;
 
@@ -34,10 +34,10 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     }
 
     /**
-     * @return iterable
+     * @return array
      * @throws RelayException
      */
-    protected function fetchData(): iterable
+    protected function fetchData(): array
     {
         $arguments = $this->arguments;
 
@@ -68,9 +68,9 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
      * @inheritdoc
      * @throws RelayException
      */
-    protected function getData(): iterable
+    protected function getData(): array
     {
-        if (!isset($this->data)) {
+        if ($this->data === null) {
             $this->data = $this->fetchData();
         }
 
