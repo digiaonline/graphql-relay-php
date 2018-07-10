@@ -13,7 +13,7 @@ Relay support for our [GraphQL implementation](https://github.com/digiaonline/gr
 Run the following command to install the package through Composer:
 
 ```sh
-composer require digiaonline/graphql-relay
+composer require digiaonline/graphql-relay:dev-master
 ```
 
 ### Example
