@@ -11,6 +11,10 @@ function starWarsSchemaWithArrayConnection()
 {
     $source = \file_get_contents(__DIR__ . '/schema.graphqls');
 
+    if ($source === false) {
+        throw new \RuntimeException('File not found');
+    }
+
     /** @noinspection PhpUnhandledExceptionInspection */
     return buildSchema($source, [
         'Query'   => [
@@ -39,6 +43,10 @@ function starWarsSchemaWithStoreConnection()
 {
     $source = \file_get_contents(__DIR__ . '/schema.graphqls');
 
+    if ($source === false) {
+        throw new \RuntimeException('File not found');
+    }
+
     /** @noinspection PhpUnhandledExceptionInspection */
     return buildSchema($source, [
         'Query'   => [
@@ -54,7 +62,7 @@ function starWarsSchemaWithStoreConnection()
                 $data = \array_reduce($faction['ships'], function ($data, $id) {
                     static $index = 0;
                     ['id' => $shipId, 'name' => $shipName] = getShip($id);
-                    $cursor = 'arrayconnection:' . $index++;
+                    $cursor        = 'arrayconnection:' . $index++;
                     $data[$cursor] = new Ship($shipId, $shipName, $cursor);
                     return $data;
                 }, []);

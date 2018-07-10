@@ -139,7 +139,7 @@ class StoreConnectionBuilder extends AbstractConnectionBuilder
     }
 
     /**
-     * @param $node
+     * @param mixed $node
      * @return string
      */
     protected function createCursor($node): string

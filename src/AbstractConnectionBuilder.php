@@ -32,7 +32,6 @@ abstract class AbstractConnectionBuilder
      *
      * @param array $data
      * @param int   $startOffset
-     * @param int   $endOffset
      * @return Edge[]
      */
     abstract protected function createEdges(array $data, int $startOffset): array;
@@ -143,6 +142,6 @@ abstract class AbstractConnectionBuilder
      */
     protected function decodeCursor(string $cursor): string
     {
-        return \base64_decode($cursor);
+        return (string)\base64_decode($cursor);
     }
 }

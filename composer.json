@@ -34,11 +34,11 @@
     "scripts": {
         "test": [
             "phpunit",
-            "phpstan analyse -l 1 src/ tests/"
+            "phpstan analyse -l 7 src/ tests/"
         ],
         "travis": [
             "phpunit --coverage-clover build/logs/clover.xml",
-            "phpstan analyse -l 1 src/ tests/"
+            "phpstan analyse -l 7 src/ tests/"
         ]
     }
 }
