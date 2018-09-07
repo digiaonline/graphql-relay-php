@@ -4,6 +4,7 @@ namespace Digia\GraphQL\Relay\Test\Functional;
 
 use Digia\GraphQL\Relay\ArrayConnectionBuilder;
 use Digia\GraphQL\Relay\ConnectionArguments;
+use Digia\GraphQL\Relay\Node;
 use Digia\GraphQL\Relay\StoreConnectionBuilder;
 use function Digia\GraphQL\buildSchema;
 
@@ -23,6 +24,17 @@ function starWarsSchemaWithArrayConnection()
             },
             'empire' => function () {
                 return empire();
+            },
+            'node' => function ($_, $args) {
+                $node = Node::fromGlobalId($args['id']);
+                switch ($node->getType()) {
+                    case 'Ship':
+                        return getShip($node->getId());
+                    case 'Faction':
+                        return getFaction($node->getId());
+                    default:
+                        throw new \RuntimeException('No node resolver for type: ' . $node->getType());
+                }
             }
         ],
         'Faction' => [
@@ -35,7 +47,7 @@ function starWarsSchemaWithArrayConnection()
 
                 return ArrayConnectionBuilder::fromArray($data, $arguments);
             }
-        ]
+        ],
     ]);
 }
 

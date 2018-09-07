@@ -2,6 +2,7 @@
 
 namespace Digia\GraphQL\Relay\Test\Functional;
 
+use Digia\GraphQL\Relay\Node;
 use Digia\GraphQL\Schema\Schema;
 use PHPUnit\Framework\TestCase;
 use function Digia\GraphQL\graphql;
@@ -267,13 +268,38 @@ class StarWarsConnectionTest extends TestCase
         $this->assertQuery($expected, $query);
     }
 
+    public function testAllowsQueryingByNodeId(): void
+    {
+        $id = Node::toGlobalId('Ship', '1');
+
+        $query = '
+        query NodeQuery {
+          node(id: "' .$id .'") {
+            ... on Ship {
+              id
+              name
+            }
+          }
+        }
+        ';
+
+        $expected = [
+            'node' => [
+                'id' => '1',
+                'name' => 'X-Wing',
+            ],
+        ];
+
+        $this->assertQuery($expected, $query);
+    }
+
     private function assertQuery($expected, $query)
     {
         foreach ($this->schemas as $schema) {
             /** @noinspection PhpUnhandledExceptionInspection */
             $result = graphql($schema, $query);
 
-            $this->assertEquals(['data' => $expected], $result);
+            $this->assertSame(['data' => $expected], $result);
         }
     }
 }
