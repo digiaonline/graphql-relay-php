@@ -170,6 +170,42 @@ schema {
 }
 ```
 
+### Node root field
+
+For implementing the [Node root field](https://facebook.github.io/relay/graphql/objectidentification.htm#sec-Node-root-field)
+a convenience class is provided:
+
+
+#### Convert Type and ID to Global ID
+
+```php
+$nodeId = Node::toGlobalId('Ship', '1');
+```
+
+returns a global ID which can be passed to the node root:
+
+```
+U2hpcDox
+```
+
+#### Convert Global ID back to type and ID
+
+```php
+$node = Node::fromGlobalId('U2hpcDox');
+```
+
+returns an object which can be queried:
+
+```php
+$node->getType(); //Ship
+$node->getId(); //1
+```
+
+#### Node root resolver
+
+For an example of how to implement the node root resolver please check the [StarWarsConnectionTest.php](tests/Functional/StarWarsConnectionTest.php)
+
+
 ## Contributing
 
 Please read our [guidelines](.github/CONTRIBUTING.md).
