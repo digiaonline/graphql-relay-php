@@ -297,16 +297,16 @@ class StarWarsConnectionTest extends TestCase
     {
         $id = Node::toGlobalId('Ship', '1');
 
-        $query = '
+        $query = "
         query NodeQuery {
-          node(id: "' .$id .'") {
+          node(id: \"${id}\") {
             ... on Ship {
               id
               name
             }
           }
         }
-        ';
+        ";
 
         $expected = [
             'node' => [

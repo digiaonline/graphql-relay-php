@@ -4,20 +4,40 @@ namespace Digia\GraphQL\Relay;
 
 final class Node
 {
+    /**
+     * @var string
+     */
     private $type;
+
+    /**
+     * @var string
+     */
     private $id;
 
+    /**
+     * @param string $type
+     * @param string $id
+     */
     private function __construct(string $type, string $id)
     {
         $this->type = $type;
         $this->id = $id;
     }
 
+    /**
+     * @param string $type
+     * @param string $id
+     * @return string
+     */
     public static function toGlobalId(string $type, string $id): string
     {
-        return base64_encode("${type}:${id}");
+        return \base64_encode("${type}:${id}");
     }
 
+    /**
+     * @param string $id
+     * @return Node
+     */
     public static function fromGlobalId(string $id): Node
     {
         $decoded = base64_decode($id, true);
@@ -34,11 +54,17 @@ final class Node
         return new self($elements[0], $elements[1]);
     }
 
+    /**
+     * @return string
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * @return string
+     */
     public function getId(): string
     {
         return $this->id;
