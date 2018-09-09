@@ -21,11 +21,12 @@ class Node
     public static function fromGlobalId(string $id): Node
     {
         $decoded = base64_decode($id, true);
+
         if (!$decoded) {
             throw new \InvalidArgumentException('ID must be a valid base 64 string');
         }
 
-        $elements = explode(':', $decoded, 2);
+        $elements = explode(':', $decoded);
         if (\count($elements) !== 2) {
             throw new \InvalidArgumentException('ID was not correctly formed');
         }
