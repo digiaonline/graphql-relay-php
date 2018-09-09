@@ -9,7 +9,7 @@ use Digia\GraphQL\Relay\StoreConnectionBuilder;
 use function Digia\GraphQL\buildSchema;
 
 function getNodeId(string $type, $variable) {
-    if (\is_object($variable)) {
+    if (\is_object($variable) && method_exists($variable, 'getId')) {
         return Node::toGlobalId($type, $variable->getId());
     }
 
@@ -17,7 +17,23 @@ function getNodeId(string $type, $variable) {
         return Node::toGlobalId($type, $variable['id']);
     }
 
-    throw new \RuntimeException('Unable to get an ID from the passed variable');
+    throw new \RuntimeException('Unable to get an ID from the variable');
+}
+
+function addType(string $type, $variable) {
+    if (\is_object($variable)) {
+        $variable->type = $type;
+
+        return $variable;
+    }
+
+    if (\is_array($variable)) {
+        $variable['type'] = $type;
+
+        return $variable;
+    }
+
+    throw new \RuntimeException('Unable to set a type on the variable');
 }
 
 function nodeResolver($root, $args)
@@ -35,10 +51,7 @@ function nodeResolver($root, $args)
             throw new \RuntimeException('No node resolver for type: ' . $node->getType());
     }
 
-    $entity['type'] = $node->getType();
-
-
-    return $entity;
+    return addType($node->getType(), $entity);
 }
 
 function starWarsSchemaWithArrayConnection()
