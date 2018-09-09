@@ -21,12 +21,6 @@ function getNodeId(string $type, $variable) {
 }
 
 function addType(string $type, $variable) {
-    if (\is_object($variable)) {
-        $variable->type = $type;
-
-        return $variable;
-    }
-
     if (\is_array($variable)) {
         $variable['type'] = $type;
 
