@@ -2,7 +2,7 @@
 
 namespace Digia\GraphQL\Relay;
 
-class Node
+final class Node
 {
     private $type;
     private $id;

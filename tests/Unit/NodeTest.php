@@ -6,7 +6,7 @@ namespace Digia\GraphQL\Relay\Test\Unit;
 use Digia\GraphQL\Relay\Node;
 use PHPUnit\Framework\TestCase;
 
-class NodeTest extends TestCase
+final class NodeTest extends TestCase
 {
     public function testItConvertsToGlobalId(): void
     {
