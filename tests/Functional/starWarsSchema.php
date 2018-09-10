@@ -4,8 +4,49 @@ namespace Digia\GraphQL\Relay\Test\Functional;
 
 use Digia\GraphQL\Relay\ArrayConnectionBuilder;
 use Digia\GraphQL\Relay\ConnectionArguments;
+use Digia\GraphQL\Relay\Node;
 use Digia\GraphQL\Relay\StoreConnectionBuilder;
 use function Digia\GraphQL\buildSchema;
+
+function getNodeId(string $type, $variable) {
+    if (\is_object($variable) && method_exists($variable, 'getId')) {
+        return Node::toGlobalId($type, $variable->getId());
+    }
+
+    if (\is_array($variable)) {
+        return Node::toGlobalId($type, $variable['id']);
+    }
+
+    throw new \RuntimeException('Unable to get an ID from the variable');
+}
+
+function addType(string $type, $variable) {
+    if (\is_array($variable)) {
+        $variable['type'] = $type;
+
+        return $variable;
+    }
+
+    throw new \RuntimeException('Unable to set a type on the variable');
+}
+
+function nodeResolver($args)
+{
+    $node = Node::fromGlobalId($args['id']);
+
+    switch ($node->getType()) {
+        case 'Ship':
+            $entity = getShip($node->getId());
+            break;
+        case 'Faction':
+            $entity = getFaction($node->getId());
+            break;
+        default:
+            throw new \RuntimeException('No node resolver for type: ' . $node->getType());
+    }
+
+    return addType($node->getType(), $entity);
+}
 
 function starWarsSchemaWithArrayConnection()
 {
@@ -23,9 +64,15 @@ function starWarsSchemaWithArrayConnection()
             },
             'empire' => function () {
                 return empire();
+            },
+            'node' => function ($root, $args) {
+                return nodeResolver($args);
             }
         ],
         'Faction' => [
+            'id' => function ($root, $args) {
+                return getNodeId('Faction', $root);
+            },
             'ships' => function ($faction, $args) {
                 $data = \array_map(function ($id) {
                     return getShip($id);
@@ -34,6 +81,11 @@ function starWarsSchemaWithArrayConnection()
                 $arguments = ConnectionArguments::fromArray($args);
 
                 return ArrayConnectionBuilder::fromArray($data, $arguments);
+            }
+        ],
+        'Ship' => [
+            'id' => function ($root, $args) {
+                return getNodeId('Ship', $root);
             }
         ]
     ]);
@@ -55,9 +107,15 @@ function starWarsSchemaWithStoreConnection()
             },
             'empire' => function () {
                 return empire();
+            },
+            'node' => function ($root, $args) {
+                return nodeResolver($args);
             }
         ],
         'Faction' => [
+            'id' => function ($root, $args) {
+                return getNodeId('Faction', $root);
+            },
             'ships' => function ($faction, $args) {
                 $data = \array_reduce($faction['ships'], function ($data, $id) {
                     static $index = 0;
@@ -70,6 +128,11 @@ function starWarsSchemaWithStoreConnection()
                 $arguments = ConnectionArguments::fromArray($args);
 
                 return StoreConnectionBuilder::forStore(new ShipStore($data), $arguments);
+            }
+        ],
+        'Ship' => [
+            'id' => function ($root, $args) {
+                return getNodeId('Ship', $root);
             }
         ]
     ]);

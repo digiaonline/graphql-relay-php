@@ -2,6 +2,7 @@
 
 namespace Digia\GraphQL\Relay\Test\Functional;
 
+use Digia\GraphQL\Relay\Node;
 use Digia\GraphQL\Schema\Schema;
 use PHPUnit\Framework\TestCase;
 use function Digia\GraphQL\graphql;
@@ -31,10 +32,11 @@ class StarWarsConnectionTest extends TestCase
         $query = '
         query RebelsShipsQuery {
           rebels {
-            name,
+            name
             ships(first: 1) {
               edges {
                 node {
+                  id
                   name
                 }
               }
@@ -50,6 +52,7 @@ class StarWarsConnectionTest extends TestCase
                     'edges' => [
                         [
                             'node' => [
+                                'id' => 'U2hpcDox',
                                 'name' => 'X-Wing'
                             ]
                         ]
@@ -68,11 +71,13 @@ class StarWarsConnectionTest extends TestCase
         $query = '
         query MoreRebelShipsQuery {
           rebels {
-            name,
+            id
+            name
             ships(first: 2) {
               edges {
-                cursor,
+                cursor
                 node {
+                  id
                   name
                 }
               }
@@ -83,18 +88,21 @@ class StarWarsConnectionTest extends TestCase
 
         $expected = [
             'rebels' => [
+                'id' => 'RmFjdGlvbjox',
                 'name'  => 'Alliance to Restore the Republic',
                 'ships' => [
                     'edges' => [
                         [
                             'cursor' => 'YXJyYXljb25uZWN0aW9uOjA=',
                             'node'   => [
+                                'id' => 'U2hpcDox',
                                 'name' => 'X-Wing'
                             ]
                         ],
                         [
                             'cursor' => 'YXJyYXljb25uZWN0aW9uOjE=',
                             'node'   => [
+                                'id' => 'U2hpcDoy',
                                 'name' => 'Y-Wing'
                             ]
                         ]
@@ -113,11 +121,13 @@ class StarWarsConnectionTest extends TestCase
         $query = '
         query EndOfRebelShipsQuery {
           rebels {
-            name,
+            id
+            name
             ships(first: 3 after: "YXJyYXljb25uZWN0aW9uOjE=") {
               edges {
-                cursor,
+                cursor
                 node {
+                  id
                   name
                 }
               }
@@ -128,24 +138,28 @@ class StarWarsConnectionTest extends TestCase
 
         $expected = [
             'rebels' => [
+                'id' => 'RmFjdGlvbjox',
                 'name'  => 'Alliance to Restore the Republic',
                 'ships' => [
                     'edges' => [
                         [
                             'cursor' => 'YXJyYXljb25uZWN0aW9uOjI=',
                             'node'   => [
+                                'id' => 'U2hpcDoz',
                                 'name' => 'A-Wing'
                             ]
                         ],
                         [
                             'cursor' => 'YXJyYXljb25uZWN0aW9uOjM=',
                             'node'   => [
+                                'id' => 'U2hpcDo0',
                                 'name' => 'Millenium Falcon'
                             ]
                         ],
                         [
                             'cursor' => 'YXJyYXljb25uZWN0aW9uOjQ=',
                             'node'   => [
+                                'id' => 'U2hpcDo1',
                                 'name' => 'Home One'
                             ]
                         ]
@@ -164,11 +178,13 @@ class StarWarsConnectionTest extends TestCase
         $query = '
         query RebelsQuery {
           rebels {
-            name,
+            id
+            name
             ships(first: 3 after: "YXJyYXljb25uZWN0aW9uOjQ=") {
               edges {
-                cursor,
+                cursor
                 node {
+                  id
                   name
                 }
               }
@@ -179,6 +195,7 @@ class StarWarsConnectionTest extends TestCase
 
         $expected = [
             'rebels' => [
+                'id' => 'RmFjdGlvbjox',
                 'name'  => 'Alliance to Restore the Republic',
                 'ships' => ['edges' => []]
             ]
@@ -194,10 +211,12 @@ class StarWarsConnectionTest extends TestCase
         $query = '
         query EndOfRebelShipsQuery {
           rebels {
-            name,
+            id
+            name
             originalShips: ships(first: 2) {
               edges {
                 node {
+                  id
                   name
                 }
               }
@@ -208,6 +227,7 @@ class StarWarsConnectionTest extends TestCase
             moreShips: ships(first: 3 after: "YXJyYXljb25uZWN0aW9uOjE=") {
               edges {
                 node {
+                  id
                   name
                 }
               }
@@ -221,16 +241,19 @@ class StarWarsConnectionTest extends TestCase
 
         $expected = [
             'rebels' => [
+                'id' => 'RmFjdGlvbjox',
                 'name'          => 'Alliance to Restore the Republic',
                 'originalShips' => [
                     'edges'    => [
                         [
                             'node' => [
+                                'id' => 'U2hpcDox',
                                 'name' => 'X-Wing'
                             ]
                         ],
                         [
                             'node' => [
+                                'id' => 'U2hpcDoy',
                                 'name' => 'Y-Wing'
                             ]
                         ]
@@ -243,16 +266,19 @@ class StarWarsConnectionTest extends TestCase
                     'edges'    => [
                         [
                             'node' => [
+                                'id' => 'U2hpcDoz',
                                 'name' => 'A-Wing'
                             ]
                         ],
                         [
                             'node' => [
+                                'id' => 'U2hpcDo0',
                                 'name' => 'Millenium Falcon'
                             ]
                         ],
                         [
                             'node' => [
+                                'id' => 'U2hpcDo1',
                                 'name' => 'Home One'
                             ]
                         ]
@@ -267,13 +293,63 @@ class StarWarsConnectionTest extends TestCase
         $this->assertQuery($expected, $query);
     }
 
+    public function testAllowsQueryingShipByNodeId(): void
+    {
+        $id = Node::toGlobalId('Ship', '1');
+
+        $query = "
+        query NodeQuery {
+          node(id: \"${id}\") {
+            ... on Ship {
+              id
+              name
+            }
+          }
+        }
+        ";
+
+        $expected = [
+            'node' => [
+                'id' => $id,
+                'name' => 'X-Wing',
+            ],
+        ];
+
+        $this->assertQuery($expected, $query);
+    }
+
+    public function testAllowsQueryingFactionByNodeId(): void
+    {
+        $id = Node::toGlobalId('Faction', '1');
+
+        $query = "
+        query NodeQuery {
+          node(id: \"${id}\") {
+            ... on Faction {
+              id
+              name
+            }
+          }
+        }
+        ";
+
+        $expected = [
+            'node' => [
+                'id' => $id,
+                'name' => 'Alliance to Restore the Republic',
+            ],
+        ];
+
+        $this->assertQuery($expected, $query);
+    }
+
     private function assertQuery($expected, $query)
     {
         foreach ($this->schemas as $schema) {
             /** @noinspection PhpUnhandledExceptionInspection */
             $result = graphql($schema, $query);
 
-            $this->assertEquals(['data' => $expected], $result);
+            $this->assertSame(['data' => $expected], $result);
         }
     }
 }
