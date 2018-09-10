@@ -30,7 +30,7 @@ function addType(string $type, $variable) {
     throw new \RuntimeException('Unable to set a type on the variable');
 }
 
-function nodeResolver($root, $args)
+function nodeResolver($args)
 {
     $node = Node::fromGlobalId($args['id']);
 
@@ -66,7 +66,7 @@ function starWarsSchemaWithArrayConnection()
                 return empire();
             },
             'node' => function ($root, $args) {
-                return nodeResolver($root, $args);
+                return nodeResolver($args);
             }
         ],
         'Faction' => [
@@ -109,7 +109,7 @@ function starWarsSchemaWithStoreConnection()
                 return empire();
             },
             'node' => function ($root, $args) {
-                return nodeResolver($root, $args);
+                return nodeResolver($args);
             }
         ],
         'Faction' => [

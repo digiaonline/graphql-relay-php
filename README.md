@@ -197,8 +197,8 @@ $node = Node::fromGlobalId('U2hpcDox');
 returns an object which can be queried:
 
 ```php
-$node->getType(); //Ship
-$node->getId(); //1
+$node->getType(); // Ship
+$node->getId(); // 1
 ```
 
 #### Node root resolver

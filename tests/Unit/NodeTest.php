@@ -1,5 +1,4 @@
-<?php declare(strict_types=1);
-
+<?php
 
 namespace Digia\GraphQL\Relay\Test\Unit;
 
@@ -8,14 +7,14 @@ use PHPUnit\Framework\TestCase;
 
 final class NodeTest extends TestCase
 {
-    public function testItConvertsToGlobalId(): void
+    public function testConvertsTypeAndIdToGlobalId(): void
     {
         $nodeId = Node::toGlobalId('Ship', '1');
 
         $this->assertSame('U2hpcDox', $nodeId, 'Node ID did not match');
     }
 
-    public function testItConvertsFromGlobalId(): void
+    public function testConvertsGlobalIdToTypeAndId(): void
     {
         $node = Node::fromGlobalId('U2hpcDox');
 
@@ -36,7 +35,7 @@ final class NodeTest extends TestCase
         $this->expectExceptionMessage(\InvalidArgumentException::class);
         $this->expectExceptionMessage('ID was not correctly formed');
 
-        $bad = base64_encode('Ship11111::::::::::');
+        $bad = \base64_encode('Ship11111::::::::::');
         Node::fromGlobalId($bad);
     }
 }
